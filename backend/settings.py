@@ -135,6 +135,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
+# Allow credentials for session authentication
+CORS_ALLOW_CREDENTIALS = True
+
 # ASGI Application
 ASGI_APPLICATION = 'backend.asgi.application'
 

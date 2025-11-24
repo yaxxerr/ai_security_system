@@ -5,7 +5,7 @@ import { Button } from "primereact/button";
 import { InputSwitch } from "primereact/inputswitch";
 import { Avatar } from "primereact/avatar";
 import { Message } from "primereact/message";
-import axios from "axios";
+import apiClient, { API_URL } from "../utils/api";
 import { createAlertWebSocket } from "../utils/websocket";
 import { useWebSocket } from "../hooks/useWebSocket";
 
@@ -43,8 +43,6 @@ interface Alert {
   incident?: Incident | null;
 }
 
-const API_URL = "http://127.0.0.1:8000/api";
-
 export default function Alerts() {
   const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(false);
@@ -69,7 +67,7 @@ export default function Alerts() {
   const fetchAlerts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get<Alert[]>(`${API_URL}/alerts/`);
+      const res = await apiClient.get<Alert[]>(`/alerts/`);
       setAlerts(res.data);
     } catch (err) {
       console.error("Failed to fetch alerts:", err);
@@ -161,7 +159,7 @@ export default function Alerts() {
 
   const acknowledgeAlert = async (alertId: number) => {
     try {
-      await axios.patch(`${API_URL}/alerts/${alertId}/`, { acknowledged: true });
+      await apiClient.patch(`/alerts/${alertId}/`, { acknowledged: true });
       // WebSocket will automatically update the alert via the 'updated' message
       // No need to fetch again
     } catch (err) {

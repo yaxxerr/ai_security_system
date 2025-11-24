@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { Avatar } from "primereact/avatar";
-import axios from "axios";
+import apiClient, { API_URL } from "../utils/api";
 import { createAlertWebSocket } from "../utils/websocket";
 import { useWebSocket } from "../hooks/useWebSocket";
 import CameraView from "../components/CameraView";
@@ -51,8 +51,6 @@ interface DashboardStats {
   recent_alerts: any[];
   last_reports: any[];
 }
-
-const API_URL = "http://127.0.0.1:8000/api";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -155,7 +153,7 @@ export default function Dashboard() {
   // === FETCH DATA ===
   const fetchCameras = async () => {
     try {
-      const res = await axios.get(`${API_URL}/cameras/`);
+      const res = await apiClient.get(`/cameras/`);
       setCameras(res.data);
     } catch (err) {
       console.error("Failed to fetch cameras:", err);
@@ -164,7 +162,7 @@ export default function Dashboard() {
 
   const fetchIncidents = async () => {
     try {
-      const res = await axios.get(`${API_URL}/incidents/`);
+      const res = await apiClient.get(`/incidents/`);
       setIncidents(res.data);
     } catch (err) {
       console.error("Failed to fetch incidents:", err);
@@ -173,7 +171,7 @@ export default function Dashboard() {
 
   const fetchAlerts = async () => {
     try {
-      const res = await axios.get<Alert[]>(`${API_URL}/alerts/`);
+      const res = await apiClient.get<Alert[]>(`/alerts/`);
       const newAlerts = res.data;
 
       setAlerts(newAlerts);
@@ -187,7 +185,7 @@ export default function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const res = await axios.get(`${API_URL}/dashboard/stats/`);
+      const res = await apiClient.get(`/dashboard/stats/`);
       setStats(res.data);
     } catch (err) {
       console.error("Failed to fetch stats:", err);
@@ -327,7 +325,7 @@ export default function Dashboard() {
     setIsAnalyzing(true);
 
     try {
-      await axios.post(`${API_URL}/analysis/start/`, {
+      await apiClient.post(`/analysis/start/`, {
         camera_ids: [selectedCamera.id],
       });
 
@@ -343,7 +341,7 @@ export default function Dashboard() {
     if (!selectedCamera) return;
 
     try {
-      await axios.post(`${API_URL}/analysis/stop/`, {
+      await apiClient.post(`/analysis/stop/`, {
         camera_ids: [selectedCamera.id],
       });
 
@@ -445,7 +443,7 @@ export default function Dashboard() {
 
   const acknowledgeAlert = async (alertId: number) => {
     try {
-      await axios.patch(`${API_URL}/alerts/${alertId}/`, {
+      await apiClient.patch(`/alerts/${alertId}/`, {
         acknowledged: true,
       });
       // WebSocket will automatically update the alert via the 'updated' message

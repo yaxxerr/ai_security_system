@@ -1,7 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, action, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.utils import timezone
 from django.contrib.auth import authenticate
@@ -25,11 +25,13 @@ from .serializers import (
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
 
 class CameraViewSet(viewsets.ModelViewSet):
     queryset = Camera.objects.all().order_by('-last_checked')
     serializer_class = CameraSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
     @action(detail=True, methods=['get'])
     def feed(self, request, pk=None):
@@ -50,6 +52,7 @@ class CameraViewSet(viewsets.ModelViewSet):
 class IncidentViewSet(viewsets.ModelViewSet):
     queryset = Incident.objects.all().order_by('-timestamp')
     serializer_class = IncidentSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
     def create(self, request, *args, **kwargs):
         """
@@ -126,6 +129,7 @@ class IncidentViewSet(viewsets.ModelViewSet):
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.all().order_by('-created_at')
     serializer_class = AlertSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
     def create(self, request, *args, **kwargs):
         """Create alert and send WebSocket notification"""
@@ -183,11 +187,13 @@ class AlertViewSet(viewsets.ModelViewSet):
 class ReportViewSet(viewsets.ModelViewSet):
     queryset = Report.objects.all().order_by('-created_at')
     serializer_class = ReportSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
 
 class AIVerificationLogViewSet(viewsets.ModelViewSet):
     queryset = AIVerificationLog.objects.all().order_by('-created_at')
     serializer_class = AIVerificationLogSerializer
+    permission_classes = [AllowAny]  # Allow unauthenticated access for development
 
 
 
@@ -276,6 +282,7 @@ def login(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])  # Allow unauthenticated access for development
 def start_analysis(request):
     camera_ids = request.data.get("camera_ids", [])
 
@@ -298,6 +305,7 @@ def start_analysis(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])  # Allow unauthenticated access for development
 def stop_analysis(request):
     camera_ids = request.data.get("camera_ids", [])
 
@@ -320,6 +328,7 @@ def stop_analysis(request):
 
 
 @api_view(['GET'])
+@permission_classes([AllowAny])  # Allow unauthenticated access for development
 def dashboard_stats(request):
     data = {
         "total_cameras": Camera.objects.count(),

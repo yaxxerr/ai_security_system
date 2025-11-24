@@ -12,6 +12,7 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import { Menubar } from "primereact/menubar";
 import { InputSwitch } from "primereact/inputswitch";
 import axios from "axios";
+import apiClient, { API_URL } from "../utils/api";
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -205,8 +206,6 @@ export default function Landing() {
     setLoginError("");
 
     try {
-      const API_URL = "http://127.0.0.1:8000/api";
-      
       // Call the login endpoint with username and password
       const response = await axios.post(`${API_URL}/auth/login/`, {
         username: username,
