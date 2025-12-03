@@ -12,6 +12,7 @@ from .views import (
     stop_analysis,
     dashboard_stats,
 )
+from .video_views import VideoDetectionViewSet
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
@@ -20,6 +21,7 @@ router.register(r'incidents', IncidentViewSet)
 router.register(r'alerts', AlertViewSet)
 router.register(r'reports', ReportViewSet)
 router.register(r'ai-logs', AIVerificationLogViewSet)
+router.register(r'detection', VideoDetectionViewSet, basename='detection')
 
 urlpatterns = [
     path('', include(router.urls)),

@@ -69,6 +69,7 @@ class Incident(models.Model):
     camera = models.ForeignKey(Camera, on_delete=models.CASCADE, related_name='incidents')
     timestamp = models.DateTimeField(auto_now_add=True)
     description = models.TextField(blank=True)
+    confidence_score = models.FloatField(default=0.0, help_text="Detection confidence (0-100)")
 
     type = models.CharField(max_length=20, choices=INCIDENT_TYPES, default='WORTH_CHECKING')
 
@@ -76,6 +77,8 @@ class Incident(models.Model):
     severity_level = models.IntegerField(default=1)
 
     is_verified = models.BooleanField(default=False)
+    # Optional AI-generated summary/enrichment for the incident
+    ai_summary = models.TextField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Automatically assign severity numeric value

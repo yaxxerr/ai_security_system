@@ -42,10 +42,12 @@ class IncidentSerializer(serializers.ModelSerializer):
             'camera',
             'camera_id',
             'description',
+            'confidence_score',
+            'ai_summary',
             'detected_by',
             'timestamp',
             'is_verified',
-            'type'      # NEW
+            'type'
         ]
 
 

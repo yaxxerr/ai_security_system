@@ -84,7 +84,9 @@ class IncidentViewSet(viewsets.ModelViewSet):
             detected_by=detected_by,
             type=incident_type,
             severity=severity,
-            is_verified=False
+            is_verified=False,
+            confidence_score=confidence_score if confidence_score is not None else 0.0,
+            ai_summary=request.data.get("ai_summary", None)
         )
 
         # Log AI verification if confidence_score provided
